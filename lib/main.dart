@@ -4,8 +4,9 @@ import 'firebase_options.dart';
 
 import 'screens/sign_in_screen.dart';
 import 'screens/sign_up_screen.dart';
-import 'screens/home_screen.dart'; // Add home screen here
-import 'services/auth_service.dart'; // For checking auth state
+import 'screens/home_screen.dart';
+import 'services/auth_service.dart';
+import 'screens/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,13 +17,13 @@ void main() async {
 }
 
 class App extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter App',
-      initialRoute: '/',
+      initialRoute: '/splash', // Set splash screen as initial route
       routes: {
+        '/splash': (context) => SplashScreen(), // Splash screen route
         '/': (context) => AppHome(), // Home screen route
         '/sign_in': (context) => SignInScreen(), // Sign-in screen route
         '/sign_up': (context) => SignUpScreen(), // Sign-up screen route
@@ -37,14 +38,12 @@ class AppHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Check if user is already logged in
     return FutureBuilder(
       future: AuthService().checkUser(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasData) {
+        } else if (snapshot.hasData) {
           return HomeScreen(); // Navigate to home if logged in
         }
         return SignInScreen(); // Otherwise, show sign-in screen

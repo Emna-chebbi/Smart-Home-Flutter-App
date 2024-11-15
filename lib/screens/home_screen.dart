@@ -8,7 +8,6 @@ class HomeScreen extends StatelessWidget {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
-        // Fetch user data from Firestore
         DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
         if (userDoc.exists) {
           return userDoc.data() as Map<String, dynamic>;
@@ -26,9 +25,20 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Welcome to Home')),
+      appBar: AppBar(
+        title: Text('Welcome to Home'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushReplacementNamed(context, '/sign_in'); // Navigate to sign-in after logout
+            },
+          ),
+        ],
+      ),
       body: FutureBuilder<Map<String, dynamic>?>(
-        future: _getUserData(), // Fetch user data asynchronously
+        future: _getUserData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -42,11 +52,12 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Welcome, ${userData?['firstName']} ${userData?['lastName']}!',
-                      style: TextStyle(fontSize: 24)),
+                  Text(
+                    'Welcome, ${userData?['firstName']} ${userData?['lastName']}!',
+                    style: TextStyle(fontSize: 24),
+                  ),
                   SizedBox(height: 10),
-                  Text('Email: ${userData?['email']}',
-                      style: TextStyle(fontSize: 18)),
+                  Text('Email: ${userData?['email']}', style: TextStyle(fontSize: 18)),
                 ],
               ),
             );
