@@ -79,16 +79,11 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  fonts:
-     - family: SourGummy_Expanded-Bold
-       fonts:
-         - asset: fonts/SourGummy_Expanded-Bold
-  #         style: italic
-     - family: SourGummy_Expanded-Regular
-       fonts:
-         - asset: fonts/SourGummy_Expanded-Regular.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
+fonts:
+    - family: SourGummy
+      fonts:
+        - asset: fonts/SourGummy_Expanded-Bold.ttf
+        - asset: fonts/SourGummy_Expanded-Regular.ttf
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
