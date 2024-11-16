@@ -67,6 +67,7 @@ flutter:
   assets:
      - assets/splash_screen.png
      - assets/sign_in.png
+     - assets/sign_up.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -84,6 +85,9 @@ fonts:
       fonts:
         - asset: fonts/SourGummy_Expanded-Bold.ttf
         - asset: fonts/SourGummy_Expanded-Regular.ttf
+    - family: Moul
+      fonts:
+        - asset: fonts/Moul-Regular.ttf
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
