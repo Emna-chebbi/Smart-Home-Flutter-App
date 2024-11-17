@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:project/services/auth_service.dart';
-import 'sign_in_screen.dart';  // Add the import for the sign-in screen
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'home_screen.dart'; // Import home screen
+import 'sign_in_screen.dart'; // Import sign-in screen
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -18,6 +20,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String? errorMessageEmail;
   String? errorMessagePassword;
   String? errorMessageConfirmPassword;
+
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
 
   void _signUp() async {
     String email = _emailController.text;
@@ -45,12 +50,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (firstName.isNotEmpty && lastName.isNotEmpty && email.isNotEmpty && password.isNotEmpty && confirmPassword.isNotEmpty) {
       if (password == confirmPassword) {
         try {
-          await AuthService().signUp(email, password, firstName, lastName);
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Sign Up Successful!")));
-        } catch (e) {
-          setState(() {
-            errorMessageEmail = "Error: $e";
+          // Create user using FirebaseAuth
+          UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email,
+            password: password,
+          );
+
+          // Save user info to Firestore with auto-generated document ID
+          FirebaseFirestore.instance.collection('users').doc(userCredential.user?.uid).set({
+            'firstName': firstName,
+            'lastName': lastName,
+            'email': email,
           });
+
+          // Show a success dialog after sign-up
+          _showSuccessDialog();
+
+          // Automatically navigate to the Home screen after a successful sign-up
+          Future.delayed(Duration(seconds: 2), () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
+          });
+        } catch (e) {
+          if (e is FirebaseAuthException) {
+            if (e.code == 'email-already-in-use') {
+              setState(() {
+                errorMessageEmail = "This email is already in use. Please try another.";
+              });
+            } else {
+              setState(() {
+                errorMessageEmail = "Error: ${e.message}";
+              });
+            }
+          }
         }
       } else {
         setState(() {
@@ -58,6 +92,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
         });
       }
     }
+  }
+
+  // Function to show the success dialog after sign-up
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent closing dialog by tapping outside
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          title: Text(
+            'Registration complete!',
+            style: TextStyle(fontSize: 18, color: Colors.green),
+            textAlign: TextAlign.center,
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -118,6 +172,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(30.0),
                                   ),
+                                  contentPadding: EdgeInsets.symmetric(vertical: 10.0), // Smaller height
                                 ),
                               ),
                             ),
@@ -131,6 +186,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(30.0),
                                   ),
+                                  contentPadding: EdgeInsets.symmetric(vertical: 10.0), // Smaller height
                                 ),
                               ),
                             ),
@@ -148,6 +204,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30.0),
                             ),
+                            contentPadding: EdgeInsets.symmetric(vertical: 10.0), // Smaller height
                           ),
                           keyboardType: TextInputType.emailAddress,
                         ),
@@ -157,13 +214,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         // Password input
                         TextField(
                           controller: _passwordController,
-                          obscureText: true,
+                          obscureText: !_isPasswordVisible,
                           decoration: InputDecoration(
                             hintText: 'Password',
                             prefixIcon: Icon(Icons.lock), // Icon inside input box
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
+                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30.0),
                             ),
+                            contentPadding: EdgeInsets.symmetric(vertical: 10.0), // Smaller height
                           ),
                         ),
                         if (errorMessagePassword != null)
@@ -172,56 +243,58 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         // Confirm Password input
                         TextField(
                           controller: _confirmPasswordController,
-                          obscureText: true,
+                          obscureText: !_isConfirmPasswordVisible,
                           decoration: InputDecoration(
                             hintText: 'Confirm Password',
                             prefixIcon: Icon(Icons.lock), // Icon inside input box
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isConfirmPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                                });
+                              },
+                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30.0),
                             ),
+                            contentPadding: EdgeInsets.symmetric(vertical: 10.0), // Smaller height
                           ),
                         ),
                         if (errorMessageConfirmPassword != null)
-                          Text(errorMessageConfirmPassword!, style: TextStyle(color: Colors.red)),
-                        SizedBox(height: 24.0),
-                        // Sign-up button
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.5, // Same width as the sign-in button
-                          child: ElevatedButton(
-                            onPressed: _signUp,
-                            child: Text('Sign Up'),
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
+                          Text(errorMessageConfirmPassword!,
+                              style: TextStyle(color: Colors.red)),
+                        SizedBox(height: 24),
+                        ElevatedButton(
+                          onPressed: _signUp,
+                          child: Text('Sign Up'),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Color(0xFF0D92F4), // Blue color for the button
+                            minimumSize: Size(150, 50), // Smaller width for the button
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
                             ),
                           ),
                         ),
-                        SizedBox(height: 16.0),
-                        // Sign-in section
+                        SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              "Already have an account? ",
-                              style: TextStyle(
-                                fontSize: 14.0,
-                              ),
-                            ),
+                            Text('Already have an account?'),
                             TextButton(
                               onPressed: () {
-                                // Navigate to Sign-In screen
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(builder: (context) => SignInScreen()),
                                 );
                               },
-                              child: Text(
-                                'Sign In',
-                                style: TextStyle(
-                                  color: Color(0xFF399918), // Green text color for the button
-                                ),
-                              ),
+                              child: Text('Sign In', style: TextStyle(color: Color(
+                                  0xFF13A805))),
                             ),
                           ],
                         ),
