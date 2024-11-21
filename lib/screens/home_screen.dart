@@ -89,8 +89,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           alignment: Alignment.bottomCenter, // Align the image to lower it
                           child: Image.asset(
                             'assets/home.png', // Path to your image
-                            height: 150, // Adjust size
-                            width: 150, // Adjust size
+                            height: 150,
+                            width: 150,
                           ),
                         ),
                       ],
