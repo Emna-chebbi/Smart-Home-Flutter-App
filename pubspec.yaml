@@ -70,6 +70,15 @@ flutter:
      - assets/sign_up.png
      - assets/device_search.png
      - assets/device_detection.png
+     - assets/lamp.png
+     - assets/lock.png
+     - assets/flame.png
+     - assets/gas.webp
+     - assets/home.png
+     - assets/bell.png
+     - assets/home_page.png
+     - assets/devices.png
+     - assets/profile.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -85,8 +94,8 @@ flutter:
 fonts:
     - family: SourGummy
       fonts:
-        - asset: fonts/SourGummy_Expanded-Bold.ttf
-        - asset: fonts/SourGummy_Expanded-Regular.ttf
+        - asset: assets/fonts/SourGummy_Expanded-Bold.ttf
+        - asset: assets/fonts/SourGummy_Expanded-Regular.ttf
     - family: Moul
       fonts:
         - asset: fonts/Moul-Regular.ttf
