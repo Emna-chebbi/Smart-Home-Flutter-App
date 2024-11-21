@@ -29,7 +29,7 @@ class SplashScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'SourGummy_Expanded-Bold', // Custom font
-                  fontSize: 25,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold, // Bold font
                   color: Color(0xFFFFFFFF),
                 ),

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'notification_page.dart';
-import 'device_detection.dart';
-import 'home_screen.dart'; // Ensure you have a HomePage for navigation.
+import 'home_screen.dart'; // Ensure HomeScreen is imported.
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -14,14 +12,19 @@ class _ProfilePageState extends State<ProfilePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  int _selectedIndex = 1; // Default to Profile Page
+  int _selectedIndex = 3; // Default to Profile Page in the bottom navigation.
   PageController _pageController = PageController();
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-    _pageController.jumpToPage(index);
+    if (index == 1) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
+    }
   }
 
   @override
@@ -124,33 +127,60 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
+          bottomNavigationBar: ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+            child: Container(
+              margin: EdgeInsets.all(22),
+              decoration: BoxDecoration(
+                color: Colors.blueGrey.withOpacity(0.8),
+                borderRadius: BorderRadius.circular(35),
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Profile',
+              child: BottomNavigationBar(
+                currentIndex: _selectedIndex,
+                items: [
+                  BottomNavigationBarItem(
+                    icon: Image.asset(
+                      'assets/devices.png', // Path to your devices image
+                      width: 40,
+                      height: 40,
+                    ),
+                    label: '',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Image.asset(
+                      'assets/home_page.png', // Path to your home page image
+                      width: 40,
+                      height: 40,
+                    ),
+                    label: '',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Image.asset(
+                      'assets/bell.png', // Path to your bell image
+                      width: 40,
+                      height: 40,
+                    ),
+                    label: '',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Image.asset(
+                      'assets/profile.png', // Path to your profile image
+                      width: 40,
+                      height: 40,
+                    ),
+                    label: '',
+                  ),
+                ],
+                backgroundColor: Colors.transparent,
+                elevation: 0.0,
+                selectedItemColor: Colors.white,
+                unselectedItemColor: Colors.white54,
+                showSelectedLabels: false,
+                showUnselectedLabels: false,
+                onTap: _onItemTapped, // Add onTap event for navigation
+                type: BottomNavigationBarType.fixed,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.notifications),
-                label: 'Notifications',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.loop),
-                label: 'Devices',
-              ),
-            ],
-            backgroundColor: Colors.white,
-            selectedItemColor: Colors.blue,
-            unselectedItemColor: Colors.black,
-            showSelectedLabels: true,
-            showUnselectedLabels: true,
-            type: BottomNavigationBarType.fixed,
-            currentIndex: _selectedIndex,
-            onTap: _onItemTapped,
+            ),
           ),
         );
       },
