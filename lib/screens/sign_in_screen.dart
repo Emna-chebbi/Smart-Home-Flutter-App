@@ -22,10 +22,13 @@ class _SignInScreenState extends State<SignInScreen> {
         _errorMessage = null;
       });
       try {
+        // Call the signIn method from AuthService
         await AuthService().signIn(
           _emailController.text.trim(),
           _passwordController.text.trim(),
         );
+
+        // After successful sign-in, navigate to the next screen
         Navigator.pushReplacementNamed(context, '/home');
       } on FirebaseAuthException catch (e) {
         setState(() {
@@ -39,18 +42,17 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200], // Light shade of grey as background color
+      backgroundColor: Colors.grey[200],
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(top: 40.0), // Added top padding
+          padding: const EdgeInsets.only(top: 40.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image at the top
               Container(
-                margin: const EdgeInsets.only(bottom: 20), // Added margin to lower the image
+                margin: const EdgeInsets.only(bottom: 20),
                 width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.35, // Slightly bigger image
+                height: MediaQuery.of(context).size.height * 0.35,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('assets/sign_in.png'),
@@ -68,7 +70,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF399918), // Changed title color to green
+                        color: Color(0xFF399918),
                       ),
                     ),
                     SizedBox(height: 8),
@@ -84,7 +86,6 @@ class _SignInScreenState extends State<SignInScreen> {
                       key: _formKey,
                       child: Column(
                         children: [
-                          // Email input
                           TextFormField(
                             controller: _emailController,
                             decoration: InputDecoration(
@@ -103,7 +104,6 @@ class _SignInScreenState extends State<SignInScreen> {
                             },
                           ),
                           SizedBox(height: 16.0),
-                          // Password input
                           TextFormField(
                             controller: _passwordController,
                             decoration: InputDecoration(
@@ -134,9 +134,8 @@ class _SignInScreenState extends State<SignInScreen> {
                             },
                           ),
                           SizedBox(height: 24.0),
-                          // Sign-in button
                           SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.5, // Reduced button width
+                            width: MediaQuery.of(context).size.width * 0.5,
                             child: ElevatedButton(
                               onPressed: _isLoading ? null : _signIn,
                               child: _isLoading
@@ -150,7 +149,6 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                           SizedBox(height: 16.0),
-                          // Error message
                           if (_errorMessage != null)
                             Text(
                               _errorMessage!,
@@ -160,7 +158,6 @@ class _SignInScreenState extends State<SignInScreen> {
                               ),
                             ),
                           SizedBox(height: 16.0),
-                          // Sign-up section
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -172,12 +169,12 @@ class _SignInScreenState extends State<SignInScreen> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, '/sign_up'); // Fixed navigation
+                                  Navigator.pushNamed(context, '/sign_up');
                                 },
                                 child: Text(
                                   'Sign Up',
                                   style: TextStyle(
-                                    color: Colors.blue, // Blue text color for the button
+                                    color: Colors.blue,
                                   ),
                                 ),
                               ),

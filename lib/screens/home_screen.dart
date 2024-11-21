@@ -1,8 +1,8 @@
+// home_screen.dart
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'profile.dart';
+import 'profile.dart'; // Make sure this import is correct
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -11,6 +11,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  String _userName = "User"; // Store username locally
 
   Future<String> _getUserName() async {
     User? user = _auth.currentUser;
@@ -24,6 +25,13 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       return "Guest";
     }
+  }
+
+  void _updateUserName() {
+    setState(() {
+      // Trigger the rebuild and refresh the username
+      _getUserName(); // This is called to update the username.
+    });
   }
 
   final List<List<DeviceCard>> roomDevices = [
@@ -99,7 +107,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-
               Expanded(
                 child: DefaultTabController(
                   length: 3,
@@ -110,8 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           height: 55,
                           child: TabBar(
-                            labelStyle:
-                            TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            labelStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             indicator: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(20),
@@ -198,32 +204,32 @@ class _HomeScreenState extends State<HomeScreen> {
               BottomNavigationBarItem(
                 icon: Image.asset(
                   'assets/devices.png', // Path to your devices image
-                  width: 40, // Adjust the width to your preference
-                  height: 40, // Adjust the height to your preference
+                  width: 40,
+                  height: 40,
                 ),
                 label: '',
               ),
               BottomNavigationBarItem(
                 icon: Image.asset(
                   'assets/home_page.png', // Path to your home page image
-                  width: 40, // Adjust the width to your preference
-                  height: 40, // Adjust the height to your preference
+                  width: 40,
+                  height: 40,
                 ),
                 label: '',
               ),
               BottomNavigationBarItem(
                 icon: Image.asset(
                   'assets/bell.png', // Path to your bell image
-                  width: 40, // Adjust the width to your preference
-                  height: 40, // Adjust the height to your preference
+                  width: 40,
+                  height: 40,
                 ),
                 label: '',
               ),
               BottomNavigationBarItem(
                 icon: Image.asset(
                   'assets/profile.png', // Path to your profile image
-                  width: 40, // Adjust the width to your preference
-                  height: 40, // Adjust the height to your preference
+                  width: 40,
+                  height: 40,
                 ),
                 label: '',
               ),
@@ -236,11 +242,10 @@ class _HomeScreenState extends State<HomeScreen> {
             showUnselectedLabels: false,
             type: BottomNavigationBarType.fixed,
             onTap: (index) {
-              // Handle the profile icon tap for navigation
-              if (index == 3) { // Profile icon is the fourth item (index 3)
+              if (index == 3) {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ProfilePage()),
+                  MaterialPageRoute(builder: (context) => ProfilePage(onProfileUpdated: _updateUserName)),
                 );
               }
             },
@@ -347,3 +352,4 @@ class _DeviceCardState extends State<DeviceCard> {
     );
   }
 }
+

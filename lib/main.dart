@@ -45,8 +45,9 @@ class AppHome extends StatelessWidget {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData) {
           return HomeScreen(); // Navigate to home if logged in
+        } else {
+          return SignInScreen(); // Otherwise, show sign-in screen
         }
-        return SignInScreen(); // Otherwise, show sign-in screen
       },
     );
   }
