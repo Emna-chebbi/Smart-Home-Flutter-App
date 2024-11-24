@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project/screens/device_detection.dart';
 import 'package:project/screens/notification_page.dart';
-import 'profile.dart'; // Make sure this import is correct
+import 'profile.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -88,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Text(
                             "Welcome to Your Home, $userName!",
                             style: TextStyle(
-                              fontSize: 35,
+                              fontSize: 27,
                               fontWeight: FontWeight.bold,
                               color: Color(0xfffff6f6),
                             ),
@@ -128,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             tabs: [
                               Tab(
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                                  padding: EdgeInsets.symmetric(horizontal: 20.0),
                                   child: Text('Living Room'),
                                 ),
                               ),
@@ -140,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               Tab(
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                  padding: EdgeInsets.symmetric(horizontal: 4.2),
                                   child: Text('Bathroom'),
                                 ),
                               ),
@@ -161,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Text(
                                       "${devices.length} devices detected",
                                       style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 17,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white,
                                       ),

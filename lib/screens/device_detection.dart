@@ -37,7 +37,7 @@ class DeviceDetectionPage extends StatelessWidget {
                   Text(
                     'Device Detection',
                     style: TextStyle(
-                      fontSize: 25,
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -56,7 +56,7 @@ class DeviceDetectionPage extends StatelessWidget {
                     child: Text(
                       'Easily detect and connect your home devices to manage and control them directly in the app.',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 18,
                         color: Colors.white70,
                       ),
                       textAlign: TextAlign.center,
@@ -76,12 +76,12 @@ class DeviceDetectionPage extends StatelessWidget {
                         backgroundColor: Colors.green, // Updated color
                         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(40),
                         ),
                       ),
                       child: Text(
                         'Detect Devices Automatically',
-                        style: TextStyle(fontSize: 16, color: Colors.white),
+                        style: TextStyle(fontSize: 15, color: Colors.white),
                       ),
                     ),
                   ),
@@ -105,7 +105,7 @@ class DeviceDetectionPage extends StatelessWidget {
                               'Or add devices manually:',
                               style: TextStyle(fontSize: 16, color: Colors.white),
                             ),
-                            SizedBox(height: 30),
+                            SizedBox(height: 25),
                             TextField(
                               decoration: InputDecoration(
                                 filled: true,
@@ -134,12 +134,12 @@ class DeviceDetectionPage extends StatelessWidget {
                         backgroundColor: Colors.green, // Updated color
                         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(40),
                         ),
                       ),
                       child: Text(
                         'Add Device Manually',
-                        style: TextStyle(fontSize: 16, color: Colors.white),
+                        style: TextStyle(fontSize: 15, color: Colors.white),
                       ),
                     ),
                   ),
