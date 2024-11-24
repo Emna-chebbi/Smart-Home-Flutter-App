@@ -25,7 +25,7 @@ class SplashScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
               child: Text(
-                'Welcome to Your \n Smart Space!',
+                'Make Life Easy \n With Smart Space!',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'SourGummy_Expanded-Bold', // Custom font

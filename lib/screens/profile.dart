@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:project/screens/device_detection.dart';
+import 'package:project/screens/notification_page.dart';
 import 'sign_in_screen.dart';
 import 'home_screen.dart'; // Import your HomeScreen
 
@@ -48,8 +50,33 @@ class _ProfilePageState extends State<ProfilePage> {
           'email': _emailController.text,
         });
 
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Profile updated successfully')));
+        // Show a cool popup for success
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              content: Row(
+                children: [
+                  Icon(Icons.check_circle, color: Colors.green, size: 30),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      'Profile updated successfully',
+                      style: TextStyle(color: Colors.green, fontSize: 16),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+
+        Future.delayed(Duration(seconds: 2), () {
+          Navigator.of(context).pop(); // Close the popup after 2 seconds
+        });
 
         _loadUserInfo();
 
@@ -60,14 +87,17 @@ class _ProfilePageState extends State<ProfilePage> {
           _email = _emailController.text;
         });
 
-        widget.onProfileUpdated(_firstNameController.text, _lastNameController.text,
-            _emailController.text);
+        widget.onProfileUpdated(
+          _firstNameController.text,
+          _lastNameController.text,
+          _emailController.text,
+        );
       } catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Failed to update profile')));
       }
     }
   }
+
+
 
   Future<void> _logOut() async {
     await FirebaseAuth.instance.signOut();
@@ -116,6 +146,16 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       backgroundColor: Colors.transparent,
                       elevation: 0,
+                      leading: IconButton(
+                          icon: Icon(
+                              Icons.arrow_back, // Back arrow icon
+                              color: Colors.white, // Arrow color set to white
+                              size: 30, // Adjust size if needed
+                          ),
+                      onPressed: () {
+                          Navigator.pop(context); // Navigate back
+                      },
+                      ),
                     ),
                     SizedBox(height: 20),
                     Center(
@@ -130,7 +170,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           Text(
                             _firstName ?? '',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 23,
                               fontFamily: 'Times New Roman',
                               fontWeight: FontWeight.bold,
                               color: Color(0xfffff6f6), // Profile text color
@@ -139,7 +179,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           Text(
                             _lastName ?? '',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 23,
                               fontFamily: 'Times New Roman',
                               fontWeight: FontWeight.bold,
                               color: Color(0xfffff6f6), // Profile text color
@@ -181,7 +221,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
-                          "My Informations",
+                          "     My Informations",
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -197,7 +237,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         width: MediaQuery.of(context).size.width * 0.8,
                         padding: EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Colors.white70,
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [BoxShadow(blurRadius: 10, color: Colors.black26)],
                         ),
@@ -292,10 +332,18 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: BottomNavigationBar(
                   items: [
                     BottomNavigationBarItem(
-                      icon: Image.asset(
-                        'assets/devices.png',
-                        width: 40,
-                        height: 40,
+                      icon: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => DeviceDetectionPage()), // Navigate to HomeScreen
+                          );
+                        },
+                        child: Image.asset(
+                          'assets/devices.png',
+                          width: 40,
+                          height: 40,
+                        ),
                       ),
                       label: '',
                     ),
@@ -316,10 +364,18 @@ class _ProfilePageState extends State<ProfilePage> {
                       label: '',
                     ),
                     BottomNavigationBarItem(
-                      icon: Image.asset(
-                        'assets/bell.png',
-                        width: 40,
-                        height: 40,
+                      icon: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => NotificationPage()), // Navigate to HomeScreen
+                          );
+                        },
+                        child: Image.asset(
+                          'assets/bell.png',
+                          width: 40,
+                          height: 40,
+                        ),
                       ),
                       label: '',
                     ),

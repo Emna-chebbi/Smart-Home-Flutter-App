@@ -1,13 +1,15 @@
-// home_screen.dart
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:project/screens/device_detection.dart';
+import 'package:project/screens/notification_page.dart';
 import 'profile.dart'; // Make sure this import is correct
 
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
+
 
 class _HomeScreenState extends State<HomeScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -58,10 +60,10 @@ class _HomeScreenState extends State<HomeScreen> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Color(0xb5f6c92e),
+                  Color(0xfff6c92e),
                   Color(0xfff4b09a),
                   Color(0xffdda7da),
-                  Color(0x890a87b5),
+                  Color(0xdb0a87b5),
                   Color(0xffafabab),
                 ],
                 begin: Alignment.topRight,
@@ -202,34 +204,66 @@ class _HomeScreenState extends State<HomeScreen> {
           child: BottomNavigationBar(
             items: [
               BottomNavigationBarItem(
-                icon: Image.asset(
-                  'assets/devices.png', // Path to your devices image
-                  width: 40,
-                  height: 40,
+                icon: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => DeviceDetectionPage()), // Navigate to HomeScreen
+                    );
+                  },
+                  child: Image.asset(
+                    'assets/devices.png',
+                    width: 40,
+                    height: 40,
+                  ),
                 ),
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: Image.asset(
-                  'assets/home_page.png', // Path to your home page image
-                  width: 40,
-                  height: 40,
+                icon: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomeScreen()), // Navigate to HomeScreen
+                    );
+                  },
+                  child: Image.asset(
+                    'assets/home_page.png',
+                    width: 40,
+                    height: 40,
+                  ),
                 ),
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: Image.asset(
-                  'assets/bell.png', // Path to your bell image
-                  width: 40,
-                  height: 40,
+                icon: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => NotificationPage()), // Navigate to HomeScreen
+                    );
+                  },
+                  child: Image.asset(
+                    'assets/bell.png',
+                    width: 40,
+                    height: 40,
+                  ),
                 ),
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: Image.asset(
-                  'assets/profile.png', // Path to your profile image
-                  width: 40,
-                  height: 40,
+                icon: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ProfilePage(onProfileUpdated: _updateUserName)), // Navigate to HomeScreen
+                    );
+                  },
+                  child: Image.asset(
+                    'assets/profile.png',
+                    width: 40,
+                    height: 40,
+                  ),
                 ),
                 label: '',
               ),
@@ -241,14 +275,6 @@ class _HomeScreenState extends State<HomeScreen> {
             showSelectedLabels: false,
             showUnselectedLabels: false,
             type: BottomNavigationBarType.fixed,
-            onTap: (index) {
-              if (index == 3) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProfilePage(onProfileUpdated: _updateUserName)),
-                );
-              }
-            },
           ),
         ),
       ),
