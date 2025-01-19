@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:project/screens/device_detection.dart';
 import 'package:project/screens/home_screen.dart';
 import 'package:project/screens/profile.dart';
@@ -9,20 +10,68 @@ class NotificationPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationPage> {
-  List<Map<String, String>> allNotifications = [
-    {
-      'imageAsset': 'assets/gas.webp',
-      'title': 'Gas Alert',
-      'timestamp': '5 min ago',
-      'message': 'High gas levels detected in the kitchen.',
-    },
-    {
-      'imageAsset': 'assets/flame.png',
-      'title': 'Flame Alert',
-      'timestamp': '30 min ago',
-      'message': 'Flame detected in the bedroom.',
-    },
-  ];
+  final DatabaseReference _database = FirebaseDatabase.instance.ref();
+  List<Map<String, String>> allNotifications = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _listenForNotifications();
+  }
+
+  // Mock method to simulate Gas Detected and Flame Detected notifications
+  void _simulateNotifications() {
+    // Simulating Gas Detected Notification
+    _addNotification('Gas Alert', 'Gas Detected', 'assets/gas.webp');
+
+    // Simulating Flame Detected Notification
+    _addNotification('Flame Alert', 'Flame Detected', 'assets/flame.png');
+  }
+
+  // Method to listen to the Realtime Database for gas and flame alerts
+  void _listenForNotifications() {
+    _database.child('sensors').onValue.listen((event) {
+      final data = event.snapshot.value as Map?;
+      if (data != null) {
+        String gasStatus = data['gas'] ?? '';
+        String flameStatus = data['flame'] ?? '';
+
+        // Debugging logs
+        print("Gas Status: $gasStatus");
+        print("Flame Status: $flameStatus");
+
+        // Check for gas alert
+        if (gasStatus == 'Gas Detected') {
+          _addNotification('Gas Alert', 'Gas Detected', 'assets/gas.webp');
+        }
+
+        // Check for flame alert
+        if (flameStatus == 'Flame Detected') {
+          _addNotification('Flame Alert', 'Flame Detected', 'assets/flame.png');
+        }
+      }
+    });
+
+    // Simulate a notification after a short delay (for testing purposes)
+    Future.delayed(Duration(seconds: 2), _simulateNotifications);
+  }
+
+  // Method to add a notification to the list
+  void _addNotification(String title, String message, String imageAsset) {
+    // Check if this notification already exists (based on title and message)
+    bool exists = allNotifications.any((notification) =>
+    notification['title'] == title && notification['message'] == message);
+
+    if (!exists) {
+      setState(() {
+        allNotifications.insert(0, {
+          'imageAsset': imageAsset,
+          'title': title,
+          'message': message,
+        });
+      });
+    }
+  }
 
   void markAllAsRead() {
     setState(() {
@@ -222,7 +271,6 @@ class _NotificationPageState extends State<NotificationPage> {
         return NotificationCard(
           imageAsset: notification['imageAsset']!,
           title: notification['title']!,
-          timestamp: notification['timestamp']!,
           message: notification['message']!,
         );
       }).toList(),
@@ -233,14 +281,12 @@ class _NotificationPageState extends State<NotificationPage> {
 class NotificationCard extends StatelessWidget {
   final String imageAsset;
   final String title;
-  final String timestamp;
   final String message;
 
   const NotificationCard({
     Key? key,
     required this.imageAsset,
     required this.title,
-    required this.timestamp,
     required this.message,
   }) : super(key: key);
 
@@ -251,13 +297,7 @@ class NotificationCard extends StatelessWidget {
       child: ListTile(
         leading: Image.asset(imageAsset, width: 40, height: 40),
         title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(timestamp, style: TextStyle(color: Colors.grey)),
-            Text(message),
-          ],
-        ),
+        subtitle: Text(message),
       ),
     );
   }

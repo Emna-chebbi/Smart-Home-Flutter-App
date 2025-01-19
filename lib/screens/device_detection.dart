@@ -127,7 +127,7 @@ class DeviceDetectionPage extends StatelessWidget {
                       onPressed: () {
                         // Placeholder for manual entry functionality
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Manual entry not implemented yet.')),
+                          SnackBar(content: Text('Enter Reference number of Device.')),
                         );
                       },
                       style: ElevatedButton.styleFrom(

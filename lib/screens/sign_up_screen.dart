@@ -40,24 +40,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
           : !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)
           ? "Please enter a valid email address"
           : null;
-      errorMessagePassword =
-      password.isEmpty ? "Please enter your password" : null;
+      errorMessagePassword = password.isEmpty ? "Please enter your password" : null;
       errorMessageConfirmPassword = confirmPassword.isEmpty
           ? "Please confirm your password"
+          : password.length < 6
+          ? "Password should be at least 6 characters"
           : null;
     });
 
-    if (firstName.isNotEmpty && lastName.isNotEmpty && email.isNotEmpty && password.isNotEmpty && confirmPassword.isNotEmpty) {
+    if (firstName.isNotEmpty &&
+        lastName.isNotEmpty &&
+        email.isNotEmpty &&
+        password.isNotEmpty &&
+        confirmPassword.isNotEmpty) {
       if (password == confirmPassword) {
         try {
           // Create user using FirebaseAuth
-          UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: email,
             password: password,
           );
 
           // Save user info to Firestore with auto-generated document ID
-          FirebaseFirestore.instance.collection('users').doc(userCredential.user?.uid).set({
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(userCredential.user?.uid)
+              .set({
             'firstName': firstName,
             'lastName': lastName,
             'email': email,
@@ -93,6 +102,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       }
     }
   }
+
 
   // Function to show the success dialog after sign-up
   void _showSuccessDialog() {

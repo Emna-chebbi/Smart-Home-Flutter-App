@@ -10,7 +10,6 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-
 class _HomeScreenState extends State<HomeScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String _userName = "User"; // Store username locally
@@ -178,6 +177,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                         );
                                       }).toList(),
                                     ),
+                                    // Add temperature and humidity
+                                    SizedBox(height: 40),
+                                    Text(
+                                      "   Living Room Temperature: 19°C",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      "   Living Room Humidity: 70%",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -308,12 +326,12 @@ class _DeviceCardState extends State<DeviceCard> {
             controller: pinController,
             obscureText: true,
             keyboardType: TextInputType.number,
-            decoration: InputDecoration(hintText: "Enter PIN (default: 0000)"),
+            decoration: InputDecoration(hintText: "Enter PIN"),
           ),
           actions: [
             TextButton(
               onPressed: () {
-                if (pinController.text == "0000") {
+                if (pinController.text == "123") {
                   setState(() {
                     isLocked = !isLocked;
                   });
@@ -378,4 +396,3 @@ class _DeviceCardState extends State<DeviceCard> {
     );
   }
 }
-
