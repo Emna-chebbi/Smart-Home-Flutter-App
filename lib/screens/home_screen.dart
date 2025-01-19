@@ -14,7 +14,13 @@ class _HomeScreenState extends State<HomeScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String _userName = "User"; // Store username locally
 
-  Future<String> _getUserName() async {
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserName();
+  }
+
+  void _fetchUserName() async {
     User? user = _auth.currentUser;
 
     if (user != null) {
@@ -22,17 +28,14 @@ class _HomeScreenState extends State<HomeScreen> {
           .collection('users')
           .doc(user.uid)
           .get();
-      return userData['firstName'] ?? "User";
+      setState(() {
+        _userName = userData['firstName'] ?? "User";
+      });
     } else {
-      return "Guest";
+      setState(() {
+        _userName = "Guest";
+      });
     }
-  }
-
-  void _updateUserName() {
-    setState(() {
-      // Trigger the rebuild and refresh the username
-      _getUserName(); // This is called to update the username.
-    });
   }
 
   final List<List<DeviceCard>> roomDevices = [
@@ -76,35 +79,29 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 40.0),
-                child: FutureBuilder<String>(
-                  future: _getUserName(),
-                  builder: (context, snapshot) {
-                    String userName = snapshot.hasData ? snapshot.data! : "User";
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "Welcome to Your Home, $userName!",
-                            style: TextStyle(
-                              fontSize: 27,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xfffff6f6),
-                            ),
-                          ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Welcome to Your Home, $_userName!",
+                        style: TextStyle(
+                          fontSize: 27,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xfffff6f6),
                         ),
-                        SizedBox(width: 2), // Space between the text and image
-                        Align(
-                          alignment: Alignment.bottomCenter, // Align the image to lower it
-                          child: Image.asset(
-                            'assets/home.png', // Path to your image
-                            height: 150,
-                            width: 150,
-                          ),
-                        ),
-                      ],
-                    );
-                  },
+                      ),
+                    ),
+                    SizedBox(width: 2), // Space between the text and image
+                    Align(
+                      alignment: Alignment.bottomCenter, // Align the image to lower it
+                      child: Image.asset(
+                        'assets/home.png', // Path to your image
+                        height: 150,
+                        width: 150,
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
@@ -177,24 +174,73 @@ class _HomeScreenState extends State<HomeScreen> {
                                         );
                                       }).toList(),
                                     ),
-                                    // Add temperature and humidity
+                                    // Add temperature and humidity in styled containers
                                     SizedBox(height: 40),
-                                    Text(
-                                      "   Living Room Temperature: 19°C",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      "   Living Room Humidity: 70%",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Container(
+                                          height: 120,
+                                          width: 150,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withOpacity(0.9),
+                                            borderRadius: BorderRadius.circular(16),
+                                          ),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Room Temperature",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              SizedBox(height: 8),
+                                              Text(
+                                                "19°C",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          height: 120,
+                                          width: 150,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withOpacity(0.9),
+                                            borderRadius: BorderRadius.circular(16),
+                                          ),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Room Humidity",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              SizedBox(height: 8),
+                                              Text(
+                                                "70%",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.blueAccent,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -274,7 +320,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ProfilePage(onProfileUpdated: _updateUserName)), // Navigate to HomeScreen
+                      MaterialPageRoute(builder: (context) => ProfilePage(onProfileUpdated: _fetchUserName)), // Navigate to HomeScreen
                     );
                   },
                   child: Image.asset(

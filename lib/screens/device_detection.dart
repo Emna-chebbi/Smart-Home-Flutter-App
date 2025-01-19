@@ -31,7 +31,8 @@ class DeviceDetectionPage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center, // Centers everything vertically
+                crossAxisAlignment: CrossAxisAlignment.center, // Centers horizontally
                 children: [
                   // Title
                   Text(
@@ -81,64 +82,6 @@ class DeviceDetectionPage extends StatelessWidget {
                       ),
                       child: Text(
                         'Detect Devices Automatically',
-                        style: TextStyle(fontSize: 15, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 30),
-                  // Manual Detection Section
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // Manual Detection Image
-                      Image.asset(
-                        'assets/manual_detection.png',
-                        height: 90,
-                        width: 90,
-                      ),
-                      SizedBox(width: 15),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Or add devices manually:',
-                              style: TextStyle(fontSize: 16, color: Colors.white),
-                            ),
-                            SizedBox(height: 25),
-                            TextField(
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white70,
-                                hintText: 'Enter device details',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Placeholder for manual entry functionality
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Enter Reference number of Device.')),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green, // Updated color
-                        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(40),
-                        ),
-                      ),
-                      child: Text(
-                        'Add Device Manually',
                         style: TextStyle(fontSize: 15, color: Colors.white),
                       ),
                     ),
